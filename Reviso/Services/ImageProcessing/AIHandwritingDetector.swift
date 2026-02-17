@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import Vision
 
-/// Uses an AI vision provider to detect handwritten answer regions in a worksheet.
-/// Returns a binary mask image where white = handwritten answers, black = keep.
+/// Hybrid handwriting detector: uses Apple Vision for precise text bounding boxes,
+/// then an AI provider to classify which text blocks are handwritten answers.
 final class AIHandwritingDetector: HandwritingDetectorProtocol {
     private let provider: AIProviderProtocol
 
@@ -17,27 +18,120 @@ final class AIHandwritingDetector: HandwritingDetectorProtocol {
     }
 
     func detectHandwriting(in image: UIImage) async throws -> UIImage {
+        // Step 1: Use Vision to find all text regions with precise bounding boxes
+        let textBlocks = try await detectTextBlocks(in: image)
+
+        guard !textBlocks.isEmpty else {
+            // No text found - return empty mask (all black = keep everything)
+            return renderMask(boxes: [], imageSize: image.size)
+        }
+
+        // Step 2: Ask AI which text blocks are handwritten answers
+        let handwrittenIndices = try await classifyHandwriting(
+            textBlocks: textBlocks,
+            image: image
+        )
+
+        // Step 3: Build mask from the bounding boxes of handwritten text
+        let handwrittenBoxes = handwrittenIndices.compactMap { index -> CGRect? in
+            guard index >= 0 && index < textBlocks.count else { return nil }
+            return textBlocks[index].bounds
+        }
+
+        return renderMask(boxes: handwrittenBoxes, imageSize: image.size)
+    }
+
+    // MARK: - Vision Text Detection
+
+    private struct TextBlock {
+        let index: Int
+        let text: String
+        let bounds: CGRect // In image coordinates (top-left origin)
+    }
+
+    private func detectTextBlocks(in image: UIImage) async throws -> [TextBlock] {
+        guard let cgImage = image.cgImage else {
+            throw AnswerEraserError.detectionFailed
+        }
+
+        return try await withCheckedThrowingContinuation { continuation in
+            let request = VNRecognizeTextRequest { request, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+
+                guard let observations = request.results as? [VNRecognizedTextObservation] else {
+                    continuation.resume(returning: [])
+                    return
+                }
+
+                let imageSize = CGSize(
+                    width: cgImage.width,
+                    height: cgImage.height
+                )
+
+                let blocks = observations.enumerated().compactMap { index, obs -> TextBlock? in
+                    guard let candidate = obs.topCandidates(1).first else { return nil }
+
+                    // Convert Vision coordinates (bottom-left, normalized) to image coordinates (top-left, pixels)
+                    let visionBox = obs.boundingBox
+                    let bounds = CGRect(
+                        x: visionBox.origin.x * imageSize.width,
+                        y: (1.0 - visionBox.origin.y - visionBox.height) * imageSize.height,
+                        width: visionBox.width * imageSize.width,
+                        height: visionBox.height * imageSize.height
+                    )
+
+                    return TextBlock(index: index, text: candidate.string, bounds: bounds)
+                }
+
+                continuation.resume(returning: blocks)
+            }
+
+            request.recognitionLevel = .accurate
+            request.usesLanguageCorrection = true
+            request.recognitionLanguages = ["zh-Hant", "zh-Hans", "en"]
+
+            let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+            do {
+                try handler.perform([request])
+            } catch {
+                continuation.resume(throwing: error)
+            }
+        }
+    }
+
+    // MARK: - AI Classification
+
+    private func classifyHandwriting(textBlocks: [TextBlock], image: UIImage) async throws -> [Int] {
+        let textList = textBlocks.map { "[\($0.index)] \"\($0.text)\"" }.joined(separator: "\n")
+
         let prompt = """
-        Analyze this worksheet image. Identify all regions containing handwritten answers \
-        (NOT printed text like questions, instructions, or labels).
+        This is a worksheet image. Below is a numbered list of all text detected in the image.
+        Identify which ones are HANDWRITTEN ANSWERS written by a student \
+        (NOT printed text like questions, instructions, labels, or headings).
 
-        Return ONLY a valid JSON array of bounding boxes for each handwritten answer region. \
-        Use normalized coordinates (0.0 to 1.0) relative to the image dimensions:
+        Handwritten answers typically include:
+        - Student's name, date, class number filled in by hand
+        - Written answers on blank lines
+        - Circled or marked choices
+        - Any text that looks handwritten rather than printed/typed
 
-        [
-            {"x": 0.1, "y": 0.2, "width": 0.3, "height": 0.05}
-        ]
+        TEXT BLOCKS:
+        \(textList)
 
-        Where x,y is the top-left corner. If no handwritten answers are found, return [].
+        Return ONLY a JSON array of the INDEX numbers of handwritten answers.
+        Example: [0, 3, 5]
+        If no handwritten answers found, return [].
         Return ONLY the JSON array, no other text.
         """
 
         let response = try await provider.send(prompt: prompt, image: image)
-        let boxes = try parseBoundingBoxes(from: response)
-        return renderMask(boxes: boxes, imageSize: image.size)
+        return try parseIndices(from: response)
     }
 
-    private func parseBoundingBoxes(from response: String) throws -> [CGRect] {
+    private func parseIndices(from response: String) throws -> [Int] {
         var cleaned = response.trimmingCharacters(in: .whitespacesAndNewlines)
         if cleaned.hasPrefix("```json") {
             cleaned = String(cleaned.dropFirst(7))
@@ -53,11 +147,10 @@ final class AIHandwritingDetector: HandwritingDetectorProtocol {
             throw AnswerEraserError.detectionFailed
         }
 
-        let decoded = try JSONDecoder().decode([BoundingBox].self, from: data)
-        return decoded.map { box in
-            CGRect(x: box.x, y: box.y, width: box.width, height: box.height)
-        }
+        return (try? JSONDecoder().decode([Int].self, from: data)) ?? []
     }
+
+    // MARK: - Mask Rendering
 
     private func renderMask(boxes: [CGRect], imageSize: CGSize) -> UIImage {
         let renderer = UIGraphicsImageRenderer(size: imageSize)
@@ -69,23 +162,10 @@ final class AIHandwritingDetector: HandwritingDetectorProtocol {
             // White rectangles (erase regions)
             UIColor.white.setFill()
             for box in boxes {
-                let rect = CGRect(
-                    x: box.origin.x * imageSize.width,
-                    y: box.origin.y * imageSize.height,
-                    width: box.size.width * imageSize.width,
-                    height: box.size.height * imageSize.height
-                )
-                // Add small padding around detected regions
-                let padded = rect.insetBy(dx: -4, dy: -4)
+                // Add padding around detected text for cleaner erasure
+                let padded = box.insetBy(dx: -6, dy: -4)
                 context.fill(padded)
             }
         }
     }
-}
-
-private struct BoundingBox: Decodable {
-    let x: CGFloat
-    let y: CGFloat
-    let width: CGFloat
-    let height: CGFloat
 }
