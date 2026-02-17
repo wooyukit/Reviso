@@ -10,7 +10,7 @@ target 'Reviso' do
   end
 
   target 'RevisoUITests' do
-    inherit! :search_paths
+    inherit! :none
   end
 end
 

@@ -47,16 +47,22 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2C4B0ABD2F44667100E05F41 /* Reviso */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = Reviso;
 			sourceTree = "<group>";
 		};
 		2C4B0ACD2F44667200E05F41 /* RevisoTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = RevisoTests;
 			sourceTree = "<group>";
 		};
 		2C4B0AD72F44667200E05F41 /* RevisoUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = RevisoUITests;
 			sourceTree = "<group>";
 		};
@@ -347,13 +353,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Reviso/Pods-Reviso-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Reviso/Pods-Reviso-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
