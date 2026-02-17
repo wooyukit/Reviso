@@ -6,38 +6,40 @@
 //
 
 import UIKit
+import CoreImage
 
-/// Fills masked regions using fast Core Graphics compositing.
+/// Fills masked regions using CIBlendWithMask for fast, correct compositing.
 /// Mask convention: white = regions to fill, black = keep original.
 final class LocalInpainter: InpainterProtocol {
 
+    private let ciContext = CIContext()
+
     func inpaint(image: UIImage, mask: UIImage) async throws -> UIImage {
-        guard let maskCG = mask.cgImage else {
+        guard let ciOriginal = CIImage(image: image),
+              let ciMask = CIImage(image: mask) else {
             throw AnswerEraserError.inpaintingFailed
         }
 
-        let size = image.size
-        let renderer = UIGraphicsImageRenderer(size: size)
+        // Create a white fill image matching the original size
+        let whiteFill = CIImage(color: .white).cropped(to: ciOriginal.extent)
 
-        let result = renderer.image { context in
-            let cgContext = context.cgContext
-            let rect = CGRect(origin: .zero, size: size)
-
-            // Draw the original image
-            image.draw(in: rect)
-
-            // Use the mask to clip: white areas in mask = where we draw the fill
-            // CGContext.clip(to:mask:) treats white as opaque, black as transparent
-            cgContext.saveGState()
-            cgContext.clip(to: rect, mask: maskCG)
-
-            // Fill masked areas with white (matches typical worksheet paper)
-            cgContext.setFillColor(UIColor.white.cgColor)
-            cgContext.fill(rect)
-
-            cgContext.restoreGState()
+        // CIBlendWithMask:
+        // - inputImage (foreground): shown where mask is WHITE
+        // - inputBackgroundImage: shown where mask is BLACK
+        // So: white fill where mask=white, original where mask=black
+        guard let filter = CIFilter(name: "CIBlendWithMask") else {
+            throw AnswerEraserError.inpaintingFailed
         }
 
-        return result
+        filter.setValue(whiteFill, forKey: kCIInputImageKey)
+        filter.setValue(ciOriginal, forKey: kCIInputBackgroundImageKey)
+        filter.setValue(ciMask, forKey: kCIInputMaskImageKey)
+
+        guard let output = filter.outputImage,
+              let cgResult = ciContext.createCGImage(output, from: ciOriginal.extent) else {
+            throw AnswerEraserError.inpaintingFailed
+        }
+
+        return UIImage(cgImage: cgResult, scale: image.scale, orientation: image.imageOrientation)
     }
 }
