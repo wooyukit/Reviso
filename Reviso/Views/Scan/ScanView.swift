@@ -11,50 +11,65 @@ import PhotosUI
 
 struct ScanView: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var viewModel = ScanViewModel(
-        eraser: AnswerEraser(
-            detector: CoreMLHandwritingDetector(),
-            inpainter: CoreMLInpainter()
-        )
-    )
+    @State private var viewModel: ScanViewModel?
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var showSaveSheet = false
     @State private var worksheetName = ""
     @State private var worksheetSubject = ""
+    @State private var settingsVM = SettingsViewModel()
 
     var body: some View {
         NavigationStack {
             Group {
-                if viewModel.isProcessing {
-                    ProcessingView()
-                } else if viewModel.cleanedImage != nil {
-                    resultView
+                if let viewModel {
+                    if viewModel.isProcessing {
+                        ProcessingView()
+                    } else if viewModel.cleanedImage != nil {
+                        resultView
+                    } else {
+                        inputSelectionView
+                    }
                 } else {
-                    inputSelectionView
+                    noProviderView
                 }
             }
             .navigationTitle("Scan Worksheet")
-            .alert("Error", isPresented: .init(
-                get: { viewModel.error != nil },
-                set: { if !$0 { viewModel.error = nil } }
-            )) {
-                Button("OK") { viewModel.error = nil }
-            } message: {
-                Text(viewModel.error ?? "")
+            .onAppear {
+                settingsVM.loadAPIKey()
+                setupEraser()
             }
-            .sheet(isPresented: $viewModel.showScanner) {
+            .alert("Error", isPresented: .init(
+                get: { viewModel?.error != nil },
+                set: { if !$0 { viewModel?.error = nil } }
+            )) {
+                Button("OK") { viewModel?.error = nil }
+            } message: {
+                Text(viewModel?.error ?? "")
+            }
+            .sheet(isPresented: Binding(
+                get: { viewModel?.showScanner ?? false },
+                set: { viewModel?.showScanner = $0 }
+            )) {
                 DocumentScannerView { images in
-                    viewModel.showScanner = false
+                    viewModel?.showScanner = false
                     if let first = images.first {
-                        Task { await viewModel.processImage(first) }
+                        Task { await viewModel?.processImage(first) }
                     }
                 } onCancel: {
-                    viewModel.showScanner = false
+                    viewModel?.showScanner = false
                 }
             }
             .sheet(isPresented: $showSaveSheet) {
                 saveWorksheetSheet
             }
+        }
+    }
+
+    private var noProviderView: some View {
+        ContentUnavailableView {
+            Label("AI Provider Not Configured", systemImage: "key")
+        } description: {
+            Text("Set up an AI provider in Settings to enable worksheet scanning and answer erasing.")
         }
     }
 
@@ -73,7 +88,7 @@ struct ScanView: View {
 
             VStack(spacing: 16) {
                 Button {
-                    viewModel.showScanner = true
+                    viewModel?.showScanner = true
                 } label: {
                     Label("Scan Document", systemImage: "camera.fill")
                         .frame(maxWidth: .infinity)
@@ -95,7 +110,7 @@ struct ScanView: View {
                     Task {
                         if let data = try? await newItem.loadTransferable(type: Data.self),
                            let image = UIImage(data: data) {
-                            await viewModel.processImage(image)
+                            await viewModel?.processImage(image)
                         }
                         selectedPhotoItem = nil
                     }
@@ -109,10 +124,10 @@ struct ScanView: View {
 
     private var resultView: some View {
         ResultView(
-            originalImage: viewModel.originalImage,
-            cleanedImage: viewModel.cleanedImage,
+            originalImage: viewModel?.originalImage,
+            cleanedImage: viewModel?.cleanedImage,
             onSave: { showSaveSheet = true },
-            onRetry: { viewModel.reset() }
+            onRetry: { viewModel?.reset() }
         )
     }
 
@@ -132,9 +147,9 @@ struct ScanView: View {
                     Button("Save") {
                         let name = worksheetName.isEmpty ? "Worksheet" : worksheetName
                         let subject = worksheetSubject.isEmpty ? "General" : worksheetSubject
-                        viewModel.saveWorksheet(name: name, subject: subject, context: modelContext)
+                        viewModel?.saveWorksheet(name: name, subject: subject, context: modelContext)
                         showSaveSheet = false
-                        viewModel.reset()
+                        viewModel?.reset()
                         worksheetName = ""
                         worksheetSubject = ""
                     }
@@ -142,6 +157,16 @@ struct ScanView: View {
             }
         }
         .presentationDetents([.medium])
+    }
+
+    private func setupEraser() {
+        guard viewModel == nil else { return }
+        if let provider = settingsVM.createProvider() {
+            let detector = AIHandwritingDetector(provider: provider)
+            let inpainter = LocalInpainter()
+            let eraser = AnswerEraser(detector: detector, inpainter: inpainter)
+            viewModel = ScanViewModel(eraser: eraser)
+        }
     }
 }
 
