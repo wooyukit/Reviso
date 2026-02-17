@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		343D35CF33751CBEA5C94B7B /* Pods_RevisoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30600E38CE397794AE276F9B /* Pods_RevisoTests.framework */; };
+		765ECA958BECA9693256835C /* Pods_RevisoUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F17C6BB6BF7C99266A73EAD2 /* Pods_RevisoUITests.framework */; };
+		BD71C9EDAFFE693F9938D339 /* Pods_Reviso.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFEB2FB5619A59D86DF32FDF /* Pods_Reviso.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		2C4B0ACB2F44667200E05F41 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,24 +30,39 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		057576ADEA70B525ED3568F0 /* Pods-RevisoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RevisoUITests.release.xcconfig"; path = "Target Support Files/Pods-RevisoUITests/Pods-RevisoUITests.release.xcconfig"; sourceTree = "<group>"; };
 		2C4B0ABB2F44667100E05F41 /* Reviso.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reviso.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C4B0ACA2F44667200E05F41 /* RevisoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RevisoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C4B0AD42F44667200E05F41 /* RevisoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RevisoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		30600E38CE397794AE276F9B /* Pods_RevisoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RevisoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		41E56266D13A0A93C78DF45B /* Pods-Reviso.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reviso.debug.xcconfig"; path = "Target Support Files/Pods-Reviso/Pods-Reviso.debug.xcconfig"; sourceTree = "<group>"; };
+		750E1FB070BA92E3329E057E /* Pods-RevisoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RevisoTests.release.xcconfig"; path = "Target Support Files/Pods-RevisoTests/Pods-RevisoTests.release.xcconfig"; sourceTree = "<group>"; };
+		A2AA73B5E526846F18ADA183 /* Pods-RevisoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RevisoUITests.debug.xcconfig"; path = "Target Support Files/Pods-RevisoUITests/Pods-RevisoUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		A33567CCB169B5BD4C946699 /* Pods-Reviso.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reviso.release.xcconfig"; path = "Target Support Files/Pods-Reviso/Pods-Reviso.release.xcconfig"; sourceTree = "<group>"; };
+		BFEB2FB5619A59D86DF32FDF /* Pods_Reviso.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Reviso.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		ECF3E4C54D59588AD9FC3178 /* Pods-RevisoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RevisoTests.debug.xcconfig"; path = "Target Support Files/Pods-RevisoTests/Pods-RevisoTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F17C6BB6BF7C99266A73EAD2 /* Pods_RevisoUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RevisoUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2C4B0ABD2F44667100E05F41 /* Reviso */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = Reviso;
 			sourceTree = "<group>";
 		};
 		2C4B0ACD2F44667200E05F41 /* RevisoTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = RevisoTests;
 			sourceTree = "<group>";
 		};
 		2C4B0AD72F44667200E05F41 /* RevisoUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = RevisoUITests;
 			sourceTree = "<group>";
 		};
@@ -52,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD71C9EDAFFE693F9938D339 /* Pods_Reviso.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				343D35CF33751CBEA5C94B7B /* Pods_RevisoTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,12 +89,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				765ECA958BECA9693256835C /* Pods_RevisoUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		004B7EBAD4BD883C505D7BD2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BFEB2FB5619A59D86DF32FDF /* Pods_Reviso.framework */,
+				30600E38CE397794AE276F9B /* Pods_RevisoTests.framework */,
+				F17C6BB6BF7C99266A73EAD2 /* Pods_RevisoUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		2C4B0AB22F44667100E05F41 = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +113,8 @@
 				2C4B0ACD2F44667200E05F41 /* RevisoTests */,
 				2C4B0AD72F44667200E05F41 /* RevisoUITests */,
 				2C4B0ABC2F44667100E05F41 /* Products */,
+				B38B6237F9DBD2A70D1E0CC1 /* Pods */,
+				004B7EBAD4BD883C505D7BD2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -92,6 +128,20 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		B38B6237F9DBD2A70D1E0CC1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				41E56266D13A0A93C78DF45B /* Pods-Reviso.debug.xcconfig */,
+				A33567CCB169B5BD4C946699 /* Pods-Reviso.release.xcconfig */,
+				ECF3E4C54D59588AD9FC3178 /* Pods-RevisoTests.debug.xcconfig */,
+				750E1FB070BA92E3329E057E /* Pods-RevisoTests.release.xcconfig */,
+				A2AA73B5E526846F18ADA183 /* Pods-RevisoUITests.debug.xcconfig */,
+				057576ADEA70B525ED3568F0 /* Pods-RevisoUITests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -99,9 +149,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2C4B0ADE2F44667200E05F41 /* Build configuration list for PBXNativeTarget "Reviso" */;
 			buildPhases = (
+				4E3F9338DAB89CB33BB1403E /* [CP] Check Pods Manifest.lock */,
 				2C4B0AB72F44667100E05F41 /* Sources */,
 				2C4B0AB82F44667100E05F41 /* Frameworks */,
 				2C4B0AB92F44667100E05F41 /* Resources */,
+				871F2229E579FDE6E5C3BC81 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -111,8 +163,6 @@
 				2C4B0ABD2F44667100E05F41 /* Reviso */,
 			);
 			name = Reviso;
-			packageProductDependencies = (
-			);
 			productName = Reviso;
 			productReference = 2C4B0ABB2F44667100E05F41 /* Reviso.app */;
 			productType = "com.apple.product-type.application";
@@ -121,6 +171,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2C4B0AE12F44667200E05F41 /* Build configuration list for PBXNativeTarget "RevisoTests" */;
 			buildPhases = (
+				0632B469DD6536955BB5D1E1 /* [CP] Check Pods Manifest.lock */,
 				2C4B0AC62F44667200E05F41 /* Sources */,
 				2C4B0AC72F44667200E05F41 /* Frameworks */,
 				2C4B0AC82F44667200E05F41 /* Resources */,
@@ -134,8 +185,6 @@
 				2C4B0ACD2F44667200E05F41 /* RevisoTests */,
 			);
 			name = RevisoTests;
-			packageProductDependencies = (
-			);
 			productName = RevisoTests;
 			productReference = 2C4B0ACA2F44667200E05F41 /* RevisoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -144,6 +193,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2C4B0AE42F44667200E05F41 /* Build configuration list for PBXNativeTarget "RevisoUITests" */;
 			buildPhases = (
+				1425E1FB663504410F3C9B52 /* [CP] Check Pods Manifest.lock */,
 				2C4B0AD02F44667200E05F41 /* Sources */,
 				2C4B0AD12F44667200E05F41 /* Frameworks */,
 				2C4B0AD22F44667200E05F41 /* Resources */,
@@ -157,8 +207,6 @@
 				2C4B0AD72F44667200E05F41 /* RevisoUITests */,
 			);
 			name = RevisoUITests;
-			packageProductDependencies = (
-			);
 			productName = RevisoUITests;
 			productReference = 2C4B0AD42F44667200E05F41 /* RevisoUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -230,6 +278,92 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0632B469DD6536955BB5D1E1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RevisoTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		1425E1FB663504410F3C9B52 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RevisoUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4E3F9338DAB89CB33BB1403E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Reviso-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		871F2229E579FDE6E5C3BC81 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Reviso/Pods-Reviso-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Reviso/Pods-Reviso-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Reviso/Pods-Reviso-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2C4B0AB72F44667100E05F41 /* Sources */ = {
@@ -307,7 +441,7 @@
 				DEVELOPMENT_TEAM = XVX9KXVZK4;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -371,7 +505,7 @@
 				DEVELOPMENT_TEAM = XVX9KXVZK4;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -392,6 +526,7 @@
 		};
 		2C4B0ADF2F44667200E05F41 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 41E56266D13A0A93C78DF45B /* Pods-Reviso.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -424,6 +559,7 @@
 		};
 		2C4B0AE02F44667200E05F41 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A33567CCB169B5BD4C946699 /* Pods-Reviso.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -456,6 +592,7 @@
 		};
 		2C4B0AE22F44667200E05F41 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = ECF3E4C54D59588AD9FC3178 /* Pods-RevisoTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -478,6 +615,7 @@
 		};
 		2C4B0AE32F44667200E05F41 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 750E1FB070BA92E3329E057E /* Pods-RevisoTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -500,6 +638,7 @@
 		};
 		2C4B0AE52F44667200E05F41 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2AA73B5E526846F18ADA183 /* Pods-RevisoUITests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -520,6 +659,7 @@
 		};
 		2C4B0AE62F44667200E05F41 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 057576ADEA70B525ED3568F0 /* Pods-RevisoUITests.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

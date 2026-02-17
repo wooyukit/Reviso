@@ -20,24 +20,21 @@ A SwiftUI iOS app that helps students (ages 6-18) practice and revise exercises 
 cd /Users/wooyukit/Documents/iOSProjects/Reviso
 pod install
 
-# Build (use .xcworkspace after pod install)
-xcodebuild -workspace Reviso.xcworkspace -scheme Reviso -destination 'platform=iOS Simulator,name=iPhone 16' build
-
-# Before CocoaPods setup, use .xcodeproj
-xcodebuild -project Reviso.xcodeproj -scheme Reviso -destination 'platform=iOS Simulator,name=iPhone 16' build
+# Build (always use .xcworkspace with CocoaPods)
+xcodebuild -workspace Reviso.xcworkspace -scheme Reviso -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
 ```
 
 ## Run Tests
 
 ```bash
 # Unit tests
-xcodebuild test -workspace Reviso.xcworkspace -scheme Reviso -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:RevisoTests
+xcodebuild test -workspace Reviso.xcworkspace -scheme Reviso -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:RevisoTests
 
 # UI tests
-xcodebuild test -workspace Reviso.xcworkspace -scheme Reviso -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:RevisoUITests
+xcodebuild test -workspace Reviso.xcworkspace -scheme Reviso -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:RevisoUITests
 
 # All tests
-xcodebuild test -workspace Reviso.xcworkspace -scheme Reviso -destination 'platform=iOS Simulator,name=iPhone 16'
+xcodebuild test -workspace Reviso.xcworkspace -scheme Reviso -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
 ```
 
 ## Project Structure
