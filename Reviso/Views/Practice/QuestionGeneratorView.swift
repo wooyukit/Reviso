@@ -107,7 +107,7 @@ struct QuestionGeneratorView: View {
     }
 
     private func setupProvider() {
-        if let provider = settingsVM.createProvider() {
+        if let provider = settingsVM.createAnyProvider() {
             let generator = QuestionGenerator(provider: provider)
             viewModel = QuestionGeneratorViewModel(generator: generator)
         }

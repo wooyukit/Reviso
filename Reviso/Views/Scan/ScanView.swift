@@ -35,7 +35,6 @@ struct ScanView: View {
             }
             .navigationTitle("Scan Worksheet")
             .onAppear {
-                settingsVM.loadAPIKey()
                 setupEraser()
             }
             .alert("Error", isPresented: .init(
@@ -160,12 +159,13 @@ struct ScanView: View {
     }
 
     private func setupEraser() {
-        guard viewModel == nil else { return }
-        if let provider = settingsVM.createProvider() {
+        if let provider = settingsVM.createAnyProvider() {
             let detector = AIHandwritingDetector(provider: provider)
             let inpainter = LocalInpainter()
             let eraser = AnswerEraser(detector: detector, inpainter: inpainter)
             viewModel = ScanViewModel(eraser: eraser)
+        } else {
+            viewModel = nil
         }
     }
 }
