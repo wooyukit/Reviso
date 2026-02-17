@@ -48,6 +48,8 @@ final class SettingsViewModel {
             return OpenAIProvider(apiKey: apiKey)
         case .gemini:
             return GeminiProvider(apiKey: apiKey)
+        case .poe:
+            return PoeProvider(apiKey: apiKey)
         }
     }
 }

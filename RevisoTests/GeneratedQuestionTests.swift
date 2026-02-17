@@ -117,7 +117,8 @@ struct GeneratedQuestionTests {
         #expect(AIProviderType.claude.displayName == "Claude")
         #expect(AIProviderType.openAI.displayName == "OpenAI")
         #expect(AIProviderType.gemini.displayName == "Gemini")
+        #expect(AIProviderType.poe.displayName == "Poe")
 
-        #expect(AIProviderType.allCases.count == 3)
+        #expect(AIProviderType.allCases.count == 4)
     }
 }
