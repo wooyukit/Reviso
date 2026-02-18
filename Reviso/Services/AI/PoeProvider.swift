@@ -15,7 +15,7 @@ final class PoeProvider: AIProviderProtocol {
     private let session: URLSession
     private let model: String
 
-    init(apiKey: String, session: URLSession = .shared, model: String = "Claude-3.5-Sonnet") {
+    init(apiKey: String, session: URLSession = .shared, model: String = "GPT-4o") {
         self.apiKey = apiKey
         self.session = session
         self.model = model
@@ -26,22 +26,27 @@ final class PoeProvider: AIProviderProtocol {
 
         var content: [[String: Any]] = [["type": "text", "text": prompt]]
 
-        if let image, let base64 = ImageUtils.toBase64JPEG(image) {
-            content.append([
-                "type": "image_url",
-                "image_url": ["url": "data:image/jpeg;base64,\(base64)"]
-            ])
+        if let image {
+            // Resize image for faster upload and processing
+            let resized = ImageUtils.resizeForProcessing(image, maxDimension: 1024)
+            if let base64 = ImageUtils.toBase64JPEG(resized, compressionQuality: 0.6) {
+                content.append([
+                    "type": "image_url",
+                    "image_url": ["url": "data:image/jpeg;base64,\(base64)"]
+                ])
+            }
         }
 
         let body: [String: Any] = [
             "model": model,
-            "max_tokens": 2048,
+            "max_tokens": 4096,
             "stream": false,
             "messages": [["role": "user", "content": content]]
         ]
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        request.timeoutInterval = 120
         request.setValue("application/json", forHTTPHeaderField: "content-type")
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.httpBody = try JSONSerialization.data(withJSONObject: body)

@@ -30,10 +30,15 @@ final class ScanViewModel {
         error = nil
 
         do {
-            let processed = ImageUtils.resizeForProcessing(image)
-            cleanedImage = try await eraser.eraseAnswers(from: processed)
+            let result = try await eraser.eraseAnswers(from: image)
+            cleanedImage = result
         } catch {
-            self.error = "Failed to process worksheet: \(error.localizedDescription)"
+            print("[ScanViewModel] Error type: \(type(of: error)), error: \(error)")
+            if case AIProviderError.httpError(statusCode: 429) = error {
+                self.error = "AI service is rate limited. Please wait a minute and try again."
+            } else {
+                self.error = "Failed to process worksheet: \(error.localizedDescription)"
+            }
             cleanedImage = nil
         }
 

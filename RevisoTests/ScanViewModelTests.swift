@@ -21,18 +21,22 @@ struct ScanViewModelTests {
         }
     }
 
-    private func makeViewModel() -> ScanViewModel {
-        let detector = MockHandwritingDetector()
-        let inpainter = MockInpainter()
-        let eraser = AnswerEraser(detector: detector, inpainter: inpainter)
+    private func makeViewModel(shouldThrow: Bool = false, delay: TimeInterval = 0) -> ScanViewModel {
+        let eraser = AnswerEraser { image in
+            if delay > 0 {
+                try await Task.sleep(for: .milliseconds(Int(delay * 1000)))
+            }
+            if shouldThrow {
+                throw AnswerEraserError.inpaintingFailed
+            }
+            return image
+        }
         return ScanViewModel(eraser: eraser)
     }
 
     @Test func processImage_setsCleanedImage() async {
         let vm = makeViewModel()
-        let image = createTestImage()
-
-        await vm.processImage(image)
+        await vm.processImage(createTestImage())
 
         #expect(vm.cleanedImage != nil)
         #expect(vm.error == nil)
@@ -40,24 +44,35 @@ struct ScanViewModelTests {
 
     @Test func processImage_setsLoadingState() async {
         let vm = makeViewModel()
-        let image = createTestImage()
 
         #expect(!vm.isProcessing)
-        await vm.processImage(image)
+        await vm.processImage(createTestImage())
         #expect(!vm.isProcessing)
     }
 
     @Test func processImage_error_setsErrorMessage() async {
-        let detector = MockHandwritingDetector()
-        detector.shouldThrowError = true
-        let inpainter = MockInpainter()
-        let eraser = AnswerEraser(detector: detector, inpainter: inpainter)
-        let vm = ScanViewModel(eraser: eraser)
-
+        let vm = makeViewModel(shouldThrow: true)
         await vm.processImage(createTestImage())
 
         #expect(vm.error != nil)
         #expect(vm.cleanedImage == nil)
+    }
+
+    @Test func processImage_doesNotBlockMainThread() async {
+        let vm = makeViewModel(delay: 0.5)
+        let image = createTestImage()
+
+        let task = Task { await vm.processImage(image) }
+
+        try? await Task.sleep(for: .milliseconds(50))
+
+        await MainActor.run {
+            #expect(vm.isProcessing, "isProcessing should be true while processing runs in background")
+        }
+
+        await task.value
+        #expect(!vm.isProcessing)
+        #expect(vm.cleanedImage != nil)
     }
 
     @Test func saveWorksheet_persistsToStore() async throws {

@@ -9,7 +9,7 @@ A SwiftUI iOS app that helps students (ages 6-18) practice and revise exercises 
 - **Target:** iOS 17.0+
 - **Persistence:** SwiftData
 - **Image Caching:** Kingfisher (CocoaPods)
-- **ML:** Core ML (handwriting segmentation + LaMa inpainting)
+- **AI Image Cleaning:** Poe API (Grok-Imagine-Image) — sends raw worksheet image, AI removes handwriting
 - **Architecture:** MVVM with `@Observable`
 - **Package Manager:** CocoaPods
 
@@ -45,15 +45,15 @@ Reviso/
 ├── Models/                      # SwiftData models & Codable types
 ├── Services/
 │   ├── DocumentScanner/         # VNDocumentCameraViewController wrapper
-│   ├── ImageProcessing/         # Handwriting detection + LaMa erasing
+│   ├── ImageProcessing/         # AI-powered answer erasing (PoeInpainter, AnswerEraser)
 │   ├── AI/                      # AI provider protocol + implementations
 │   ├── OCR/                     # Vision framework text recognition
 │   ├── KeychainService.swift    # Secure API key storage
 │   └── WorksheetStore.swift     # SwiftData CRUD
 ├── ViewModels/                  # @Observable view models
 ├── Views/                       # SwiftUI views
-├── Resources/                   # Core ML models, assets
-└── Utilities/                   # Image processing helpers
+├── Resources/                   # Assets
+└── Utilities/                   # Image processing helpers (resize, base64)
 ```
 
 ## Conventions
@@ -65,18 +65,21 @@ Reviso/
 - **Testing:** Use mocks conforming to service protocols; use in-memory ModelContainer for SwiftData tests
 - **Naming:** PascalCase for types, camelCase for properties/methods, descriptive test names with `test_methodName_expectedBehavior` pattern
 - **Error handling:** Typed errors where possible; display user-friendly messages in ViewModels
-- **Image processing:** All ML inference runs on-device via Core ML
+- **Image processing:** Raw worksheet image sent directly to Poe API (Grok-Imagine-Image); no on-device preprocessing. Includes retry with exponential backoff for 429 rate limits.
 - **API keys:** Stored in Keychain, never hardcoded or logged
 
 ## Key Features
 
-1. **Answer Eraser:** Scan worksheet → detect handwriting (Core ML) → erase with inpainting (LaMa) → clean copy
+1. **Answer Eraser:** Scan worksheet → send to Poe API (Grok-Imagine-Image) → AI removes handwriting and cleans image → clean copy ready for students to fill in again
 2. **AI Question Generator:** OCR worksheet → send to AI (user's API key) → generate similar questions
 3. **Worksheet Library:** SwiftData persistence of original + cleaned worksheets
 
 ## AI Providers Supported
 
-Users provide their own API keys. Supported providers:
+Users provide their own API keys. Supported providers for question generation:
 - **Claude** (Anthropic): `api.anthropic.com/v1/messages`
 - **OpenAI**: `api.openai.com/v1/chat/completions`
 - **Gemini** (Google): `generativelanguage.googleapis.com/v1beta/...`
+- **Poe**: `api.poe.com/v1/chat/completions`
+
+**AI Inpainting (Answer Eraser):** Requires a Poe API key. Uses Poe's OpenAI-compatible API with the Grok-Imagine-Image model. Images are resized to max 1024px and sent as base64 JPEG. Retry with exponential backoff (up to 5 retries) handles 429 rate limits. The Poe key is independent of the question generation provider selection.

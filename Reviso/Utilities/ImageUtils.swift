@@ -10,19 +10,37 @@ import UIKit
 enum ImageUtils {
 
     /// Resize image so neither dimension exceeds maxDimension, preserving aspect ratio.
+    /// Uses Core Graphics directly so it is safe to call from any thread.
     static func resizeForProcessing(_ image: UIImage, maxDimension: CGFloat = 1568) -> UIImage {
-        let size = image.size
-        guard size.width > maxDimension || size.height > maxDimension else {
+        guard let cgImage = image.cgImage else { return image }
+        let pixelWidth = CGFloat(cgImage.width)
+        let pixelHeight = CGFloat(cgImage.height)
+
+        guard pixelWidth > maxDimension || pixelHeight > maxDimension else {
             return image
         }
 
-        let scale = min(maxDimension / size.width, maxDimension / size.height)
-        let newSize = CGSize(width: size.width * scale, height: size.height * scale)
+        let scale = min(maxDimension / pixelWidth, maxDimension / pixelHeight)
+        let newWidth = Int(pixelWidth * scale)
+        let newHeight = Int(pixelHeight * scale)
 
-        let renderer = UIGraphicsImageRenderer(size: newSize)
-        return renderer.image { _ in
-            image.draw(in: CGRect(origin: .zero, size: newSize))
+        let colorSpace = cgImage.colorSpace ?? CGColorSpaceCreateDeviceRGB()
+        guard let context = CGContext(
+            data: nil,
+            width: newWidth,
+            height: newHeight,
+            bitsPerComponent: cgImage.bitsPerComponent,
+            bytesPerRow: 0,
+            space: colorSpace,
+            bitmapInfo: cgImage.bitmapInfo.rawValue
+        ) else {
+            return image
         }
+        context.interpolationQuality = .high
+        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+
+        guard let resizedCG = context.makeImage() else { return image }
+        return UIImage(cgImage: resizedCG)
     }
 
     /// Convert UIImage to base64-encoded JPEG string.

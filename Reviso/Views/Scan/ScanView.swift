@@ -17,6 +17,7 @@ struct ScanView: View {
     @State private var worksheetName = ""
     @State private var worksheetSubject = ""
     @State private var settingsVM = SettingsViewModel()
+    @State private var scannedImage: UIImage?
 
     var body: some View {
         NavigationStack {
@@ -48,11 +49,17 @@ struct ScanView: View {
             .sheet(isPresented: Binding(
                 get: { viewModel?.showScanner ?? false },
                 set: { viewModel?.showScanner = $0 }
-            )) {
+            ), onDismiss: {
+                // Process after scanner sheet animation is fully complete
+                if let image = scannedImage {
+                    scannedImage = nil
+                    Task { await viewModel?.processImage(image) }
+                }
+            }) {
                 DocumentScannerView { images in
                     viewModel?.showScanner = false
                     if let first = images.first {
-                        Task { await viewModel?.processImage(first) }
+                        scannedImage = first
                     }
                 } onCancel: {
                     viewModel?.showScanner = false
@@ -66,9 +73,9 @@ struct ScanView: View {
 
     private var noProviderView: some View {
         ContentUnavailableView {
-            Label("AI Provider Not Configured", systemImage: "key")
+            Label("Poe API Key Required", systemImage: "key")
         } description: {
-            Text("Set up an AI provider in Settings to enable worksheet scanning and answer erasing.")
+            Text("Add your Poe API key in Settings to enable AI handwriting erasure.")
         }
     }
 
@@ -159,14 +166,18 @@ struct ScanView: View {
     }
 
     private func setupEraser() {
-        if let provider = settingsVM.createAnyProvider() {
-            let detector = AIHandwritingDetector(provider: provider)
-            let inpainter = LocalInpainter()
-            let eraser = AnswerEraser(detector: detector, inpainter: inpainter)
-            viewModel = ScanViewModel(eraser: eraser)
-        } else {
+        let keychain = KeychainService()
+
+        guard let key = try? keychain.retrieve(for: .poe), !key.isEmpty else {
+            print("[ScanView] No Poe key, showing noProviderView")
             viewModel = nil
+            return
         }
+
+        let inpainter = PoeInpainter(apiKey: key)
+        let eraser = AnswerEraser(inpainter: inpainter)
+        print("[ScanView] Using PoeInpainter (Grok-Imagine-Image)")
+        viewModel = ScanViewModel(eraser: eraser)
     }
 }
 
