@@ -60,8 +60,7 @@ struct QuestionListView: View {
                         Label("Regenerate", systemImage: "arrow.clockwise")
                     }
 
-                    if let questions = viewModel.questions.first,
-                       !viewModel.questions.isEmpty {
+                    if !viewModel.questions.isEmpty {
                         ShareLink(
                             item: shareText,
                             preview: SharePreview("Practice Questions")

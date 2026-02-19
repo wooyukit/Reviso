@@ -130,14 +130,34 @@ struct WorksheetDetailView: View {
                 .buttonStyle(.bordered)
                 .controlSize(.large)
 
-                Button {
-                    scoreEntryPractice = practice
-                } label: {
-                    Label("Score My Answers", systemImage: "checkmark.circle")
-                        .frame(maxWidth: .infinity)
+                if let latestSession = sessions.first {
+                    Button {
+                        selectedPractice = practice
+                    } label: {
+                        Label("View Score: \(latestSession.correctCount)/\(latestSession.totalQuestions) (\(latestSession.scorePercentage)%)", systemImage: "chart.bar")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
+
+                    Button {
+                        scoreEntryPractice = practice
+                    } label: {
+                        Label("Score Again", systemImage: "arrow.clockwise")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
+                } else {
+                    Button {
+                        scoreEntryPractice = practice
+                    } label: {
+                        Label("Score My Answers", systemImage: "checkmark.circle")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
                 }
-                .buttonStyle(.bordered)
-                .controlSize(.large)
             }
 
             if let uiImage = UIImage(data: worksheet.cleanedImage ?? worksheet.originalImage) {

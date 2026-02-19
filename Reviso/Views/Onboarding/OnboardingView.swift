@@ -145,6 +145,12 @@ struct OnboardingView: View {
                 }
             }
 
+            if let error {
+                Text(error)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+            }
+
             Spacer()
             HStack {
                 skipButton

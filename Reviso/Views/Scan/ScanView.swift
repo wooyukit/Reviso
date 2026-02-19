@@ -204,6 +204,7 @@ struct ScanView: View {
     }
 
     private func setupEraser() {
+        guard viewModel == nil else { return }
         let keychain = KeychainService()
 
         guard let key = try? keychain.retrieve(for: .poe), !key.isEmpty else {
