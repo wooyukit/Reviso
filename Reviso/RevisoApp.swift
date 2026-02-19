@@ -14,6 +14,8 @@ struct RevisoApp: App {
         let schema = Schema([
             Worksheet.self,
             GeneratedPractice.self,
+            PracticeSession.self,
+            QuestionResult.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
