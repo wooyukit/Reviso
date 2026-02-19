@@ -77,12 +77,14 @@ struct WorksheetGridCell: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let uiImage = UIImage(data: worksheet.cleanedImage ?? worksheet.originalImage) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFill()
+                Color.clear
                     .frame(height: 160)
-                    .clipped()
-                    .cornerRadius(8)
+                    .overlay {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFill()
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             } else {
                 RoundedRectangle(cornerRadius: 8)
                     .fill(.gray.opacity(0.2))

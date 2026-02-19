@@ -116,7 +116,9 @@ struct ScanView: View {
                     Task {
                         if let data = try? await newItem.loadTransferable(type: Data.self),
                            let image = UIImage(data: data) {
-                            await viewModel?.processImage(image)
+                            let normalizer = VisionDocumentNormalizer()
+                            let normalized = (try? await normalizer.normalize(image)) ?? image
+                            await viewModel?.processImage(normalized)
                         }
                         selectedPhotoItem = nil
                     }
