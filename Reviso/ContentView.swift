@@ -9,22 +9,28 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    @State private var navigation = AppNavigation()
+    @State private var showOnboarding = !UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+
     var body: some View {
-        TabView {
-            Tab("Home", systemImage: "house") {
-                HomeView()
+        TabView(selection: $navigation.selectedTab) {
+            Tab("Worksheets", systemImage: "doc.text", value: .worksheets) {
+                WorksheetsTabView()
             }
 
-            Tab("Practice", systemImage: "pencil.and.list.clipboard") {
-                PracticeTabView()
-            }
-
-            Tab("Scan", systemImage: "camera") {
+            Tab("Scan", systemImage: "camera", value: .scan) {
                 ScanView()
             }
 
-            Tab("Settings", systemImage: "gear") {
+            Tab("Settings", systemImage: "gear", value: .settings) {
                 SettingsView()
+            }
+        }
+        .environment(navigation)
+        .fullScreenCover(isPresented: $showOnboarding) {
+            OnboardingView {
+                UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+                showOnboarding = false
             }
         }
     }
