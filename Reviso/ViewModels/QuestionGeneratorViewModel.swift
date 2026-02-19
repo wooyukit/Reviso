@@ -13,6 +13,7 @@ final class QuestionGeneratorViewModel {
     var isGenerating = false
     var error: String?
     var questionCount = 3
+    var selectedDifficulty: Difficulty = .medium
 
     private let generator: QuestionGenerator
 
@@ -27,7 +28,7 @@ final class QuestionGeneratorViewModel {
         questions = []
 
         do {
-            questions = try await generator.generate(from: text, image: image, count: questionCount)
+            questions = try await generator.generate(from: text, image: image, difficulty: selectedDifficulty, count: questionCount)
         } catch {
             self.error = "Failed to generate questions: \(error.localizedDescription)"
         }

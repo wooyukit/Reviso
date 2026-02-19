@@ -63,4 +63,19 @@ struct QuestionGeneratorViewModelTests {
         await vm.generateQuestions(from: "Second")
         #expect(vm.questions.count == 1)
     }
+
+    @Test func generateQuestions_passesDifficultyToGenerator() async {
+        let mockProvider = MockAIProvider()
+        mockProvider.mockResponse = """
+        [{"question": "Q", "type": "shortAnswer", "correctAnswer": "A"}]
+        """
+
+        let generator = QuestionGenerator(provider: mockProvider)
+        let vm = QuestionGeneratorViewModel(generator: generator)
+        vm.selectedDifficulty = .hard
+
+        await vm.generateQuestions(from: "Test")
+
+        #expect(mockProvider.lastPrompt?.contains("complex") == true)
+    }
 }
