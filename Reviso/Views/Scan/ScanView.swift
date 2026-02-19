@@ -15,7 +15,8 @@ struct ScanView: View {
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var showSaveSheet = false
     @State private var worksheetName = ""
-    @State private var worksheetSubject = ""
+    @State private var worksheetSubject = "General"
+    @State private var worksheetSubTopic: String?
     @State private var settingsVM = SettingsViewModel()
     @State private var scannedImage: UIImage?
 
@@ -143,7 +144,7 @@ struct ScanView: View {
         NavigationStack {
             Form {
                 TextField("Worksheet Name", text: $worksheetName)
-                TextField("Subject", text: $worksheetSubject)
+                SubjectPicker(selectedSubject: $worksheetSubject, selectedSubTopic: $worksheetSubTopic)
             }
             .navigationTitle("Save Worksheet")
             .navigationBarTitleDisplayMode(.inline)
@@ -154,12 +155,21 @@ struct ScanView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         let name = worksheetName.isEmpty ? "Worksheet" : worksheetName
-                        let subject = worksheetSubject.isEmpty ? "General" : worksheetSubject
-                        viewModel?.saveWorksheet(name: name, subject: subject, context: modelContext)
+                        viewModel?.saveWorksheet(name: name, subject: worksheetSubject, context: modelContext)
+                        // Set subTopicName on the most recently saved worksheet
+                        if worksheetSubTopic != nil {
+                            var descriptor = FetchDescriptor<Worksheet>(sortBy: [SortDescriptor(\.createdDate, order: .reverse)])
+                            descriptor.fetchLimit = 1
+                            if let saved = try? modelContext.fetch(descriptor).first {
+                                saved.subTopicName = worksheetSubTopic
+                                try? modelContext.save()
+                            }
+                        }
                         showSaveSheet = false
                         viewModel?.reset()
                         worksheetName = ""
-                        worksheetSubject = ""
+                        worksheetSubject = "General"
+                        worksheetSubTopic = nil
                     }
                 }
             }
