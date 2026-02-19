@@ -13,6 +13,7 @@ struct RevisoApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Worksheet.self,
+            GeneratedPractice.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
