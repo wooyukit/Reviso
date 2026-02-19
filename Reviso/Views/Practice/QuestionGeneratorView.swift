@@ -12,6 +12,7 @@ struct QuestionGeneratorView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: QuestionGeneratorViewModel?
     @State private var settingsVM = SettingsViewModel()
+    @Environment(AppNavigation.self) private var navigation: AppNavigation?
 
     var body: some View {
         NavigationStack {
@@ -50,9 +51,11 @@ struct QuestionGeneratorView: View {
         } description: {
             Text("Set up an AI provider in Settings to generate practice questions.")
         } actions: {
-            Button("Open Settings") {
+            Button("Go to Settings") {
                 dismiss()
+                navigation?.selectedTab = .settings
             }
+            .buttonStyle(.borderedProminent)
         }
     }
 
