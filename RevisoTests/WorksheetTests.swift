@@ -93,4 +93,27 @@ struct WorksheetTests {
         let results = try context.fetch(descriptor)
         #expect(results.isEmpty)
     }
+
+    @Test func worksheet_subTopicName_defaultsToNil() throws {
+        let container = try makeContainer()
+        let context = ModelContext(container)
+
+        let worksheet = Worksheet(name: "Test", subject: "Math", originalImage: Data())
+        context.insert(worksheet)
+        try context.save()
+
+        #expect(worksheet.subTopicName == nil)
+    }
+
+    @Test func worksheet_subTopicName_canBeSet() throws {
+        let container = try makeContainer()
+        let context = ModelContext(container)
+
+        let worksheet = Worksheet(name: "Test", subject: "Math", originalImage: Data())
+        worksheet.subTopicName = "Algebra"
+        context.insert(worksheet)
+        try context.save()
+
+        #expect(worksheet.subTopicName == "Algebra")
+    }
 }

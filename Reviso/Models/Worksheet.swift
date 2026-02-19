@@ -15,6 +15,7 @@ final class Worksheet {
     @Attribute(.externalStorage) var originalImage: Data
     @Attribute(.externalStorage) var cleanedImage: Data?
     var createdDate: Date
+    var subTopicName: String?
 
     init(name: String, subject: String, originalImage: Data) {
         self.name = name
