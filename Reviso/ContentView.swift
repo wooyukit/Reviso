@@ -15,6 +15,10 @@ struct ContentView: View {
                 HomeView()
             }
 
+            Tab("Practice", systemImage: "pencil.and.list.clipboard") {
+                PracticeTabView()
+            }
+
             Tab("Scan", systemImage: "camera") {
                 ScanView()
             }
@@ -28,5 +32,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Worksheet.self, inMemory: true)
+        .modelContainer(for: [Worksheet.self, GeneratedPractice.self, PracticeSession.self, QuestionResult.self], inMemory: true)
 }
