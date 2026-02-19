@@ -22,7 +22,7 @@ struct QuestionGeneratorView: View {
                     } else if viewModel.questions.isEmpty && viewModel.error == nil {
                         setupView
                     } else {
-                        QuestionListView(viewModel: viewModel) {
+                        QuestionListView(viewModel: viewModel, worksheet: worksheet) {
                             Task { await generateQuestions(viewModel: viewModel) }
                         }
                     }
