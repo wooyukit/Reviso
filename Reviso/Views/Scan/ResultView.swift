@@ -10,7 +10,8 @@ import SwiftUI
 struct ResultView: View {
     let originalImage: UIImage?
     let cleanedImage: UIImage?
-    let onSave: () -> Void
+    let onSaveAndGenerate: () -> Void
+    let onSaveToLibrary: () -> Void
     let onRetry: () -> Void
 
     @State private var showOriginal = false
@@ -26,7 +27,7 @@ struct ResultView: View {
 
             ScrollView {
                 let image = showOriginal ? originalImage : cleanedImage
-                if let image, let uiImage = image as UIImage? {
+                if let uiImage = image {
                     Image(uiImage: uiImage)
                         .resizable()
                         .scaledToFit()
@@ -35,24 +36,31 @@ struct ResultView: View {
                 }
             }
 
-            HStack(spacing: 16) {
-                Button(role: .destructive) {
-                    onRetry()
+            VStack(spacing: 12) {
+                Button {
+                    onSaveAndGenerate()
                 } label: {
-                    Label("Retry", systemImage: "arrow.counterclockwise")
+                    Label("Save & Generate Questions", systemImage: "sparkles")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+
+                Button {
+                    onSaveToLibrary()
+                } label: {
+                    Label("Save to Library", systemImage: "square.and.arrow.down")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.large)
 
-                Button {
-                    onSave()
+                Button(role: .destructive) {
+                    onRetry()
                 } label: {
-                    Label("Save", systemImage: "square.and.arrow.down")
-                        .frame(maxWidth: .infinity)
+                    Text("Retry")
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                .buttonStyle(.plain)
             }
             .padding(.horizontal)
             .padding(.bottom)
@@ -64,7 +72,8 @@ struct ResultView: View {
     ResultView(
         originalImage: nil,
         cleanedImage: nil,
-        onSave: {},
+        onSaveAndGenerate: {},
+        onSaveToLibrary: {},
         onRetry: {}
     )
 }

@@ -19,6 +19,10 @@ struct ScanView: View {
     @State private var worksheetSubTopic: String?
     @State private var settingsVM = SettingsViewModel()
     @State private var scannedImage: UIImage?
+    @State private var generateAfterSave = false
+    @State private var pendingWorksheetForGenerator: Worksheet?
+    @State private var worksheetForQuestionGenerator: Worksheet?
+    @Environment(AppNavigation.self) private var navigation: AppNavigation?
 
     var body: some View {
         NavigationStack {
@@ -51,7 +55,6 @@ struct ScanView: View {
                 get: { viewModel?.showScanner ?? false },
                 set: { viewModel?.showScanner = $0 }
             ), onDismiss: {
-                // Process after scanner sheet animation is fully complete
                 if let image = scannedImage {
                     scannedImage = nil
                     Task { await viewModel?.processImage(image) }
@@ -66,8 +69,16 @@ struct ScanView: View {
                     viewModel?.showScanner = false
                 }
             }
-            .sheet(isPresented: $showSaveSheet) {
+            .sheet(isPresented: $showSaveSheet, onDismiss: {
+                if let worksheet = pendingWorksheetForGenerator {
+                    pendingWorksheetForGenerator = nil
+                    worksheetForQuestionGenerator = worksheet
+                }
+            }) {
                 saveWorksheetSheet
+            }
+            .sheet(item: $worksheetForQuestionGenerator) { worksheet in
+                QuestionGeneratorView(worksheet: worksheet)
             }
         }
     }
@@ -77,6 +88,11 @@ struct ScanView: View {
             Label("Poe API Key Required", systemImage: "key")
         } description: {
             Text("Add your Poe API key in Settings to enable AI handwriting erasure.")
+        } actions: {
+            Button("Go to Settings") {
+                navigation?.selectedTab = .settings
+            }
+            .buttonStyle(.borderedProminent)
         }
     }
 
@@ -135,7 +151,14 @@ struct ScanView: View {
         ResultView(
             originalImage: viewModel?.originalImage,
             cleanedImage: viewModel?.cleanedImage,
-            onSave: { showSaveSheet = true },
+            onSaveAndGenerate: {
+                generateAfterSave = true
+                showSaveSheet = true
+            },
+            onSaveToLibrary: {
+                generateAfterSave = false
+                showSaveSheet = true
+            },
             onRetry: { viewModel?.reset() }
         )
     }
@@ -150,26 +173,29 @@ struct ScanView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { showSaveSheet = false }
+                    Button("Cancel") {
+                        showSaveSheet = false
+                        generateAfterSave = false
+                    }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         let name = worksheetName.isEmpty ? "Worksheet" : worksheetName
-                        viewModel?.saveWorksheet(name: name, subject: worksheetSubject, context: modelContext)
-                        // Set subTopicName on the most recently saved worksheet
-                        if worksheetSubTopic != nil {
-                            var descriptor = FetchDescriptor<Worksheet>(sortBy: [SortDescriptor(\.createdDate, order: .reverse)])
-                            descriptor.fetchLimit = 1
-                            if let saved = try? modelContext.fetch(descriptor).first {
-                                saved.subTopicName = worksheetSubTopic
-                                try? modelContext.save()
-                            }
+                        let worksheet = viewModel?.saveWorksheet(
+                            name: name,
+                            subject: worksheetSubject,
+                            subTopicName: worksheetSubTopic,
+                            context: modelContext
+                        )
+                        if generateAfterSave, let worksheet {
+                            pendingWorksheetForGenerator = worksheet
                         }
                         showSaveSheet = false
                         viewModel?.reset()
                         worksheetName = ""
                         worksheetSubject = "General"
                         worksheetSubTopic = nil
+                        generateAfterSave = false
                     }
                 }
             }
@@ -181,14 +207,12 @@ struct ScanView: View {
         let keychain = KeychainService()
 
         guard let key = try? keychain.retrieve(for: .poe), !key.isEmpty else {
-            print("[ScanView] No Poe key, showing noProviderView")
             viewModel = nil
             return
         }
 
         let inpainter = PoeInpainter(apiKey: key)
         let eraser = AnswerEraser(inpainter: inpainter)
-        print("[ScanView] Using PoeInpainter (Grok-Imagine-Image)")
         viewModel = ScanViewModel(eraser: eraser)
     }
 }
@@ -196,4 +220,5 @@ struct ScanView: View {
 #Preview {
     ScanView()
         .modelContainer(for: Worksheet.self, inMemory: true)
+        .environment(AppNavigation())
 }
