@@ -70,12 +70,24 @@ struct QuestionGeneratorView: View {
                 .padding(.horizontal)
 
             if let viewModel {
-                Stepper("Number of questions: \(viewModel.questionCount)",
-                        value: Binding(
-                            get: { viewModel.questionCount },
-                            set: { viewModel.questionCount = $0 }
-                        ),
-                        in: 1...10)
+                VStack(spacing: 16) {
+                    Stepper("Number of questions: \(viewModel.questionCount)",
+                            value: Binding(
+                                get: { viewModel.questionCount },
+                                set: { viewModel.questionCount = $0 }
+                            ),
+                            in: 1...10)
+
+                    Picker("Difficulty", selection: Binding(
+                        get: { viewModel.selectedDifficulty },
+                        set: { viewModel.selectedDifficulty = $0 }
+                    )) {
+                        ForEach(Difficulty.allCases, id: \.self) { difficulty in
+                            Text(difficulty.displayName).tag(difficulty)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
                 .padding(.horizontal, 32)
             }
 
