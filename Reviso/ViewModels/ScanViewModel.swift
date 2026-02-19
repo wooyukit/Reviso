@@ -45,8 +45,9 @@ final class ScanViewModel {
         isProcessing = false
     }
 
-    func saveWorksheet(name: String, subject: String, context: ModelContext) {
-        guard let originalData = originalImage?.jpegData(compressionQuality: 0.8) else { return }
+    @discardableResult
+    func saveWorksheet(name: String, subject: String, subTopicName: String? = nil, context: ModelContext) -> Worksheet? {
+        guard let originalData = originalImage?.jpegData(compressionQuality: 0.8) else { return nil }
 
         let worksheet = Worksheet(
             name: name,
@@ -54,9 +55,11 @@ final class ScanViewModel {
             originalImage: originalData
         )
         worksheet.cleanedImage = cleanedImage?.jpegData(compressionQuality: 0.8)
+        worksheet.subTopicName = subTopicName
 
         context.insert(worksheet)
         try? context.save()
+        return worksheet
     }
 
     func reset() {

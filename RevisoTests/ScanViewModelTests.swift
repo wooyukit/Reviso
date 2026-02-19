@@ -92,4 +92,41 @@ struct ScanViewModelTests {
         #expect(results[0].name == "Test")
         #expect(results[0].subject == "Math")
     }
+
+    @Test func saveWorksheet_returnsWorksheet() throws {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: Worksheet.self, configurations: config)
+        let context = ModelContext(container)
+
+        let vm = makeViewModel()
+        vm.originalImage = createTestImage()
+
+        let result = vm.saveWorksheet(
+            name: "Test",
+            subject: "Math",
+            subTopicName: "Algebra",
+            context: context
+        )
+
+        #expect(result != nil)
+        #expect(result?.name == "Test")
+        #expect(result?.subject == "Math")
+        #expect(result?.subTopicName == "Algebra")
+    }
+
+    @Test func saveWorksheet_returnsNil_whenNoImage() throws {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: Worksheet.self, configurations: config)
+        let context = ModelContext(container)
+
+        let vm = makeViewModel()
+
+        let result = vm.saveWorksheet(
+            name: "Test",
+            subject: "Math",
+            context: context
+        )
+
+        #expect(result == nil)
+    }
 }
