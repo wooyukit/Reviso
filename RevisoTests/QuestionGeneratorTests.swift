@@ -84,4 +84,40 @@ struct QuestionGeneratorTests {
 
         #expect(mockProvider.lastPrompt?.contains("Solve x + 5 = 10") == true)
     }
+
+    @Test func generate_withDifficulty_includesDifficultyInPrompt() async throws {
+        let mockProvider = MockAIProvider()
+        mockProvider.mockResponse = """
+        [{"question": "Q", "type": "shortAnswer", "correctAnswer": "A"}]
+        """
+
+        let generator = QuestionGenerator(provider: mockProvider)
+        _ = try await generator.generate(from: "Test", difficulty: .hard, count: 1)
+
+        #expect(mockProvider.lastPrompt?.contains("complex") == true)
+    }
+
+    @Test func generate_withEasyDifficulty_includesEasyInPrompt() async throws {
+        let mockProvider = MockAIProvider()
+        mockProvider.mockResponse = """
+        [{"question": "Q", "type": "shortAnswer", "correctAnswer": "A"}]
+        """
+
+        let generator = QuestionGenerator(provider: mockProvider)
+        _ = try await generator.generate(from: "Test", difficulty: .easy, count: 1)
+
+        #expect(mockProvider.lastPrompt?.contains("simpl") == true)
+    }
+
+    @Test func generate_withoutDifficulty_defaultsToMedium() async throws {
+        let mockProvider = MockAIProvider()
+        mockProvider.mockResponse = """
+        [{"question": "Q", "type": "shortAnswer", "correctAnswer": "A"}]
+        """
+
+        let generator = QuestionGenerator(provider: mockProvider)
+        _ = try await generator.generate(from: "Test", count: 1)
+
+        #expect(mockProvider.lastPrompt?.contains("same") == true)
+    }
 }

@@ -19,15 +19,18 @@ final class QuestionGenerator {
         self.provider = provider
     }
 
-    func generate(from worksheetText: String, image: UIImage? = nil, count: Int = 3) async throws -> [GeneratedQuestion] {
-        let prompt = buildPrompt(worksheetText: worksheetText, count: count)
+    func generate(from worksheetText: String, image: UIImage? = nil, difficulty: Difficulty = .medium, count: Int = 3) async throws -> [GeneratedQuestion] {
+        let prompt = buildPrompt(worksheetText: worksheetText, difficulty: difficulty, count: count)
         let response = try await provider.send(prompt: prompt, image: image)
         return try parseQuestions(from: response)
     }
 
-    private func buildPrompt(worksheetText: String, count: Int) -> String {
+    private func buildPrompt(worksheetText: String, difficulty: Difficulty, count: Int) -> String {
         """
         Analyze the following worksheet content and generate \(count) similar practice questions.
+
+        DIFFICULTY LEVEL: \(difficulty.displayName)
+        \(difficulty.promptDescription)
 
         WORKSHEET CONTENT:
         \(worksheetText)
@@ -45,7 +48,7 @@ final class QuestionGenerator {
 
         Notes:
         - "options" is only required for "multipleChoice" type
-        - Generate questions at a similar difficulty level
+        - Always include "correctAnswer" and "explanation" for every question
         - Vary the question types when appropriate
         """
     }
