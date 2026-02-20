@@ -20,17 +20,16 @@ final class RevisoUITests: XCTestCase {
     // MARK: - Tab Navigation
 
     @MainActor
-    func testTabBar_showsThreeTabs() throws {
+    func testTabBar_showsTwoTabs() throws {
         let tabBar = app.tabBars.firstMatch
         XCTAssertTrue(tabBar.exists)
 
         XCTAssertTrue(tabBar.buttons["Worksheets"].exists)
         XCTAssertTrue(tabBar.buttons["Scan"].exists)
-        XCTAssertTrue(tabBar.buttons["Settings"].exists)
     }
 
     @MainActor
-    func testTabBar_defaultsToHomeTab() throws {
+    func testTabBar_defaultsToWorksheetsTab() throws {
         XCTAssertTrue(app.navigationBars["My Worksheets"].exists)
     }
 
@@ -40,16 +39,10 @@ final class RevisoUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Scan Worksheet"].exists)
     }
 
-    @MainActor
-    func testTabBar_switchToSettingsTab() throws {
-        app.tabBars.buttons["Settings"].tap()
-        XCTAssertTrue(app.navigationBars["Settings"].exists)
-    }
-
-    // MARK: - Home Tab
+    // MARK: - Worksheets Tab
 
     @MainActor
-    func testHomeTab_showsEmptyState() throws {
+    func testWorksheetsTab_showsEmptyState() throws {
         XCTAssertTrue(app.staticTexts["No Worksheets Yet"].exists)
     }
 }
