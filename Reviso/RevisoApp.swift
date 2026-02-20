@@ -32,6 +32,7 @@ struct RevisoApp: App {
         WindowGroup {
             ContentView()
                 .environment(languageManager)
+                .environment(\.locale, languageManager.locale)
         }
         .modelContainer(sharedModelContainer)
     }
