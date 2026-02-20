@@ -24,7 +24,7 @@ final class RevisoUITests: XCTestCase {
         let tabBar = app.tabBars.firstMatch
         XCTAssertTrue(tabBar.exists)
 
-        XCTAssertTrue(tabBar.buttons["Home"].exists)
+        XCTAssertTrue(tabBar.buttons["Worksheets"].exists)
         XCTAssertTrue(tabBar.buttons["Scan"].exists)
         XCTAssertTrue(tabBar.buttons["Settings"].exists)
     }

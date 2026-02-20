@@ -24,7 +24,7 @@ struct AIInpainterTests {
 
     private func mockSession() -> URLSession {
         let config = URLSessionConfiguration.ephemeral
-        config.protocolClasses = [MockURLProtocol.self]
+        config.protocolClasses = [InpainterMockURLProtocol.self]
         return URLSession(configuration: config)
     }
 
@@ -45,9 +45,9 @@ struct AIInpainterTests {
             ]]
         ]
 
-        MockURLProtocol.reset()
-        MockURLProtocol.mockResponseData = try JSONSerialization.data(withJSONObject: responseJSON)
-        MockURLProtocol.mockStatusCode = 200
+        InpainterMockURLProtocol.reset()
+        InpainterMockURLProtocol.mockResponseData = try JSONSerialization.data(withJSONObject: responseJSON)
+        InpainterMockURLProtocol.mockStatusCode = 200
 
         let inpainter = PoeInpainter(apiKey: "test-poe-key", session: mockSession())
         let result = try await inpainter.cleanWorksheet(createTestImage())
@@ -57,9 +57,9 @@ struct AIInpainterTests {
     }
 
     @Test func poeInpainter_throwsOnHTTPError() async {
-        MockURLProtocol.reset()
-        MockURLProtocol.mockStatusCode = 401
-        MockURLProtocol.mockResponseData = Data("unauthorized".utf8)
+        InpainterMockURLProtocol.reset()
+        InpainterMockURLProtocol.mockStatusCode = 401
+        InpainterMockURLProtocol.mockResponseData = Data("unauthorized".utf8)
 
         let inpainter = PoeInpainter(apiKey: "bad-key", session: mockSession())
 

@@ -10,7 +10,6 @@ import SwiftData
 
 struct ContentView: View {
     @State private var navigation = AppNavigation()
-    @State private var showOnboarding = !UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
 
     var body: some View {
         TabView(selection: $navigation.selectedTab) {
@@ -27,12 +26,6 @@ struct ContentView: View {
             }
         }
         .environment(navigation)
-        .fullScreenCover(isPresented: $showOnboarding) {
-            OnboardingView {
-                UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
-                showOnboarding = false
-            }
-        }
     }
 }
 
