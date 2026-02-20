@@ -17,12 +17,10 @@ struct ScanView: View {
     @State private var worksheetName = ""
     @State private var worksheetSubject = "General"
     @State private var worksheetSubTopic: String?
-    @State private var settingsVM = SettingsViewModel()
     @State private var scannedImage: UIImage?
     @State private var generateAfterSave = false
     @State private var pendingWorksheetForGenerator: Worksheet?
     @State private var worksheetForQuestionGenerator: Worksheet?
-    @Environment(AppNavigation.self) private var navigation: AppNavigation?
 
     var body: some View {
         NavigationStack {
@@ -36,7 +34,7 @@ struct ScanView: View {
                         inputSelectionView
                     }
                 } else {
-                    noProviderView
+                    ProgressView()
                 }
             }
             .navigationTitle("Scan Worksheet")
@@ -80,19 +78,6 @@ struct ScanView: View {
             .sheet(item: $worksheetForQuestionGenerator) { worksheet in
                 QuestionGeneratorView(worksheet: worksheet)
             }
-        }
-    }
-
-    private var noProviderView: some View {
-        ContentUnavailableView {
-            Label("Poe API Key Required", systemImage: "key")
-        } description: {
-            Text("Add your Poe API key in Settings to enable AI handwriting erasure.")
-        } actions: {
-            Button("Go to Settings") {
-                navigation?.selectedTab = .settings
-            }
-            .buttonStyle(.borderedProminent)
         }
     }
 
@@ -205,14 +190,7 @@ struct ScanView: View {
 
     private func setupEraser() {
         guard viewModel == nil else { return }
-        let keychain = KeychainService()
-
-        guard let key = try? keychain.retrieve(for: .poe), !key.isEmpty else {
-            viewModel = nil
-            return
-        }
-
-        let inpainter = PoeInpainter(apiKey: key)
+        let inpainter = PoeInpainter(apiKey: APIConfig.poeAPIKey)
         let eraser = AnswerEraser(inpainter: inpainter)
         viewModel = ScanViewModel(eraser: eraser)
     }
@@ -221,5 +199,4 @@ struct ScanView: View {
 #Preview {
     ScanView()
         .modelContainer(for: Worksheet.self, inMemory: true)
-        .environment(AppNavigation())
 }
