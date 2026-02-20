@@ -78,11 +78,11 @@ struct ScoreSummaryView: View {
 
     private var encouragementText: String {
         switch scorePercentage {
-        case 90...100: "Excellent work! You've mastered this!"
-        case 80..<90: "Great job! Almost perfect!"
-        case 70..<80: "Good effort! Keep practicing!"
-        case 60..<70: "Not bad! A bit more practice will help."
-        default: "Keep going! Practice makes perfect."
+        case 90...100: String(localized: "Excellent work! You've mastered this!")
+        case 80..<90: String(localized: "Great job! Almost perfect!")
+        case 70..<80: String(localized: "Good effort! Keep practicing!")
+        case 60..<70: String(localized: "Not bad! A bit more practice will help.")
+        default: String(localized: "Keep going! Practice makes perfect.")
         }
     }
 }

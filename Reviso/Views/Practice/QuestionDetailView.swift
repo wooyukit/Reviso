@@ -79,9 +79,9 @@ struct QuestionDetailView: View {
 
     private var typeDisplayName: String {
         switch question.type {
-        case .multipleChoice: "Multiple Choice"
-        case .shortAnswer: "Short Answer"
-        case .fillInBlank: "Fill in the Blank"
+        case .multipleChoice: String(localized: "Multiple Choice")
+        case .shortAnswer: String(localized: "Short Answer")
+        case .fillInBlank: String(localized: "Fill in the Blank")
         }
     }
 }

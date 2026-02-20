@@ -14,9 +14,9 @@ enum Difficulty: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .easy: "Easy"
-        case .medium: "Medium"
-        case .hard: "Hard"
+        case .easy: String(localized: "Easy")
+        case .medium: String(localized: "Medium")
+        case .hard: String(localized: "Hard")
         }
     }
 
