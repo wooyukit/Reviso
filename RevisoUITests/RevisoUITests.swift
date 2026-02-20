@@ -20,12 +20,13 @@ final class RevisoUITests: XCTestCase {
     // MARK: - Tab Navigation
 
     @MainActor
-    func testTabBar_showsTwoTabs() throws {
+    func testTabBar_showsThreeTabs() throws {
         let tabBar = app.tabBars.firstMatch
         XCTAssertTrue(tabBar.exists)
 
         XCTAssertTrue(tabBar.buttons["Worksheets"].exists)
         XCTAssertTrue(tabBar.buttons["Scan"].exists)
+        XCTAssertTrue(tabBar.buttons["Settings"].exists)
     }
 
     @MainActor
@@ -37,6 +38,12 @@ final class RevisoUITests: XCTestCase {
     func testTabBar_switchToScanTab() throws {
         app.tabBars.buttons["Scan"].tap()
         XCTAssertTrue(app.navigationBars["Scan Worksheet"].exists)
+    }
+
+    @MainActor
+    func testTabBar_switchToSettingsTab() throws {
+        app.tabBars.buttons["Settings"].tap()
+        XCTAssertTrue(app.navigationBars["Settings"].exists)
     }
 
     // MARK: - Worksheets Tab

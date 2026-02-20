@@ -15,10 +15,11 @@ struct AppNavigationTests {
         #expect(nav.selectedTab == .worksheets)
     }
 
-    @Test func tabCases_areTwo() {
+    @Test func tabCases_areThree() {
         let cases = AppTab.allCases
-        #expect(cases.count == 2)
+        #expect(cases.count == 3)
         #expect(cases.contains(.worksheets))
         #expect(cases.contains(.scan))
+        #expect(cases.contains(.settings))
     }
 }
