@@ -730,6 +730,36 @@
           }
         }
       }
+    },
+    "AI service is rate limited. Please wait a minute and try again." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI 服務已達速率限制。請稍等一分鐘後再試。"
+          }
+        }
+      }
+    },
+    "Failed to process worksheet: %@" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "處理工作紙失敗：%@"
+          }
+        }
+      }
+    },
+    "Failed to generate questions: %@" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "生成題目失敗：%@"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

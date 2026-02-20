@@ -35,9 +35,9 @@ final class ScanViewModel {
         } catch {
             print("[ScanViewModel] Error type: \(type(of: error)), error: \(error)")
             if case AIProviderError.httpError(statusCode: 429) = error {
-                self.error = "AI service is rate limited. Please wait a minute and try again."
+                self.error = String(localized: "AI service is rate limited. Please wait a minute and try again.")
             } else {
-                self.error = "Failed to process worksheet: \(error.localizedDescription)"
+                self.error = String(localized: "Failed to process worksheet: \(error.localizedDescription)")
             }
             cleanedImage = nil
         }

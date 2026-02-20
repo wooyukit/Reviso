@@ -30,7 +30,7 @@ final class QuestionGeneratorViewModel {
         do {
             questions = try await generator.generate(from: text, image: image, difficulty: selectedDifficulty, count: questionCount)
         } catch {
-            self.error = "Failed to generate questions: \(error.localizedDescription)"
+            self.error = String(localized: "Failed to generate questions: \(error.localizedDescription)")
         }
 
         isGenerating = false
