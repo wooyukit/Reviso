@@ -9,7 +9,6 @@ import UIKit
 @testable import Reviso
 
 final class MockAIProvider: AIProviderProtocol {
-    var providerType: AIProviderType = .claude
     var mockResponse: String = ""
     var shouldThrowError = false
     var sendCallCount = 0

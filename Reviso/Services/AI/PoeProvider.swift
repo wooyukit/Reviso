@@ -10,7 +10,6 @@ import UIKit
 /// Poe API client using the OpenAI-compatible endpoint.
 /// API key from https://poe.com/api_key
 final class PoeProvider: AIProviderProtocol {
-    let providerType: AIProviderType = .poe
     private let apiKey: String
     private let session: URLSession
     private let model: String

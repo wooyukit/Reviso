@@ -22,6 +22,5 @@ enum AIProviderError: LocalizedError {
 }
 
 protocol AIProviderProtocol {
-    var providerType: AIProviderType { get }
     func send(prompt: String, image: UIImage?) async throws -> String
 }
