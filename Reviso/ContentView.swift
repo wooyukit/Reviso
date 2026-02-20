@@ -20,10 +20,6 @@ struct ContentView: View {
             Tab("Scan", systemImage: "camera", value: .scan) {
                 ScanView()
             }
-
-            Tab("Settings", systemImage: "gear", value: .settings) {
-                SettingsView()
-            }
         }
         .environment(navigation)
     }

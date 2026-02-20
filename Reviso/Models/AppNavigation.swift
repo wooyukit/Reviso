@@ -10,7 +10,6 @@ import Foundation
 enum AppTab: Int, CaseIterable {
     case worksheets
     case scan
-    case settings
 }
 
 @Observable
