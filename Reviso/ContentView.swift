@@ -32,4 +32,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .modelContainer(for: [Worksheet.self, GeneratedPractice.self, PracticeSession.self, QuestionResult.self], inMemory: true)
+        .environment(LanguageManager())
 }

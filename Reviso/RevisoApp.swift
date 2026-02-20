@@ -10,6 +10,8 @@ import SwiftData
 
 @main
 struct RevisoApp: App {
+    @State private var languageManager = LanguageManager()
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Worksheet.self,
@@ -29,6 +31,7 @@ struct RevisoApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(languageManager)
         }
         .modelContainer(sharedModelContainer)
     }
