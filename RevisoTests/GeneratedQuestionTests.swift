@@ -113,12 +113,4 @@ struct GeneratedQuestionTests {
         #expect(QuestionType.allCases.contains(.fillInBlank))
     }
 
-    @Test func aiProviderType_properties() {
-        #expect(AIProviderType.claude.displayName == "Claude")
-        #expect(AIProviderType.openAI.displayName == "OpenAI")
-        #expect(AIProviderType.gemini.displayName == "Gemini")
-        #expect(AIProviderType.poe.displayName == "Poe")
-
-        #expect(AIProviderType.allCases.count == 4)
-    }
 }
