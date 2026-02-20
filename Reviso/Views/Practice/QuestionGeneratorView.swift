@@ -11,8 +11,6 @@ struct QuestionGeneratorView: View {
     let worksheet: Worksheet
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: QuestionGeneratorViewModel?
-    @State private var settingsVM = SettingsViewModel()
-    @Environment(AppNavigation.self) private var navigation: AppNavigation?
 
     var body: some View {
         NavigationStack {
@@ -28,7 +26,7 @@ struct QuestionGeneratorView: View {
                         }
                     }
                 } else {
-                    providerSetupView
+                    ProgressView()
                 }
             }
             .navigationTitle("Practice Questions")
@@ -39,23 +37,8 @@ struct QuestionGeneratorView: View {
                 }
             }
             .onAppear {
-                settingsVM.loadAPIKey()
                 setupProvider()
             }
-        }
-    }
-
-    private var providerSetupView: some View {
-        ContentUnavailableView {
-            Label("AI Provider Not Configured", systemImage: "key")
-        } description: {
-            Text("Set up an AI provider in Settings to generate practice questions.")
-        } actions: {
-            Button("Go to Settings") {
-                dismiss()
-                navigation?.selectedTab = .settings
-            }
-            .buttonStyle(.borderedProminent)
         }
     }
 
@@ -122,10 +105,9 @@ struct QuestionGeneratorView: View {
     }
 
     private func setupProvider() {
-        if let provider = settingsVM.createAnyProvider() {
-            let generator = QuestionGenerator(provider: provider)
-            viewModel = QuestionGeneratorViewModel(generator: generator)
-        }
+        let provider = PoeProvider(apiKey: APIConfig.poeAPIKey)
+        let generator = QuestionGenerator(provider: provider)
+        viewModel = QuestionGeneratorViewModel(generator: generator)
     }
 
     private func generateQuestions(viewModel: QuestionGeneratorViewModel) async {
